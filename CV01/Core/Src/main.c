@@ -98,7 +98,7 @@ int main(void)
 	while (1)
 	{
 		//variable with morse sequence
-		uint32_t morseBinarySequence = 0b10101001110111011100101010000000;
+		const uint32_t morseBinarySequence = 0b10101001110111011100101010000000;
 
 		//iterate through every bit of morseBinarySequence and set output pin accordingly
 		for (uint32_t i = 0; i < 32; i++)
