@@ -62,7 +62,8 @@ static void MX_USART2_UART_Init(void);
  * @brief  The application entry point.
  * @retval int
  */
-int main(void) {
+int main(void)
+{
 
 	/* USER CODE BEGIN 1 */
 
@@ -94,15 +95,18 @@ int main(void) {
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-	while (1) {
-		const  uint8_t morseArray[] = {1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0};
+	while (1)
+	{
+		//array with morse sequence
+		const uint8_t morseArray[] =
+		{ 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
 
-		for(uint8_t i = 0; i < sizeof(morseArray); i++)
+		//iterate through every element of morseArray and set output pin accordingly
+		for (uint8_t i = 0; i < sizeof(morseArray); i++)
 		{
-			if(morseArray[i])
+			if (morseArray[i])
 			{
 				LL_GPIO_SetOutputPin(LD2_GPIO_Port, LD2_Pin);
-
 			}
 			else
 			{
@@ -121,14 +125,17 @@ int main(void) {
  * @brief System Clock Configuration
  * @retval None
  */
-void SystemClock_Config(void) {
+void SystemClock_Config(void)
+{
 	LL_FLASH_SetLatency(LL_FLASH_LATENCY_1);
-	while (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_1) {
+	while (LL_FLASH_GetLatency() != LL_FLASH_LATENCY_1)
+	{
 	}
 	LL_RCC_HSI_Enable();
 
 	/* Wait till HSI is ready */
-	while (LL_RCC_HSI_IsReady() != 1) {
+	while (LL_RCC_HSI_IsReady() != 1)
+	{
 
 	}
 	LL_RCC_HSI_SetCalibTrimming(16);
@@ -136,7 +143,8 @@ void SystemClock_Config(void) {
 	LL_RCC_PLL_Enable();
 
 	/* Wait till PLL is ready */
-	while (LL_RCC_PLL_IsReady() != 1) {
+	while (LL_RCC_PLL_IsReady() != 1)
+	{
 
 	}
 	LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
@@ -144,7 +152,8 @@ void SystemClock_Config(void) {
 	LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
 
 	/* Wait till System clock is ready */
-	while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL) {
+	while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL)
+	{
 
 	}
 	LL_Init1msTick(48000000);
@@ -156,15 +165,18 @@ void SystemClock_Config(void) {
  * @param None
  * @retval None
  */
-static void MX_USART2_UART_Init(void) {
+static void MX_USART2_UART_Init(void)
+{
 
 	/* USER CODE BEGIN USART2_Init 0 */
 
 	/* USER CODE END USART2_Init 0 */
 
-	LL_USART_InitTypeDef USART_InitStruct = { 0 };
+	LL_USART_InitTypeDef USART_InitStruct =
+	{ 0 };
 
-	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+	LL_GPIO_InitTypeDef GPIO_InitStruct =
+	{ 0 };
 
 	/* Peripheral clock enable */
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2);
@@ -215,9 +227,12 @@ static void MX_USART2_UART_Init(void) {
  * @param None
  * @retval None
  */
-static void MX_GPIO_Init(void) {
-	LL_EXTI_InitTypeDef EXTI_InitStruct = { 0 };
-	LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+static void MX_GPIO_Init(void)
+{
+	LL_EXTI_InitTypeDef EXTI_InitStruct =
+	{ 0 };
+	LL_GPIO_InitTypeDef GPIO_InitStruct =
+	{ 0 };
 	/* USER CODE BEGIN MX_GPIO_Init_1 */
 	/* USER CODE END MX_GPIO_Init_1 */
 
@@ -265,11 +280,13 @@ static void MX_GPIO_Init(void) {
  * @brief  This function is executed in case of error occurrence.
  * @retval None
  */
-void Error_Handler(void) {
+void Error_Handler(void)
+{
 	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
-	while (1) {
+	while (1)
+	{
 	}
 	/* USER CODE END Error_Handler_Debug */
 }
