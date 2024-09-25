@@ -97,14 +97,13 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		//array with morse sequence
-		const uint8_t morseArray[] =
-		{ 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
+		//variable with morse sequence
+		uint32_t morseBinarySequence = 0b10101001110111011100101010000000;
 
-		//iterate through every element of morseArray and set output pin accordingly
-		for (uint8_t i = 0; i < sizeof(morseArray); i++)
+		//iterate through every bit of morseBinarySequence and set output pin accordingly
+		for (uint32_t i = 0; i < 32; i++)
 		{
-			if (morseArray[i])
+			if (morseBinarySequence & (1U << i))
 			{
 				LL_GPIO_SetOutputPin(LD2_GPIO_Port, LD2_Pin);
 			}
