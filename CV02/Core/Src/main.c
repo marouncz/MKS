@@ -31,7 +31,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define LED_TIME_BLINK 300
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -42,6 +42,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+volatile uint32_t Tick;
 
 /* USER CODE END PV */
 
@@ -50,7 +51,16 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
+void blink(void)
+{
+	static uint32_t delay;
+	if (Tick > (delay + LED_TIME_BLINK))
+	{
+		LL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+		delay = Tick;
+	}
 
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -90,13 +100,14 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  LL_SYSTICK_EnableIT();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  blink();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

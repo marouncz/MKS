@@ -107,7 +107,7 @@ void Error_Handler(void);
 #endif
 
 /* USER CODE BEGIN Private defines */
-
+extern volatile uint32_t Tick;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
