@@ -68,12 +68,13 @@ void blink(void)
 void button(void)
 {
 	static uint32_t delay;
+	static uint32_t off_time;
 	if (Tick > (delay + BUTTON_TIME_DEBOUNCE))
 	{
 		delay = Tick;
 		static uint32_t old_s2;
 		static uint32_t old_s1;
-		static uint32_t off_time;
+
 		uint32_t new_s2 = LL_GPIO_IsInputPinSet(S2_GPIO_Port, S2_Pin);
 		uint32_t new_s1 = LL_GPIO_IsInputPinSet(S1_GPIO_Port, S1_Pin);
 
@@ -90,10 +91,11 @@ void button(void)
 		old_s2 = new_s2;
 		old_s1 = new_s1;
 
-		if (Tick > off_time)
-		{
-			LL_GPIO_ResetOutputPin(LED2_GPIO_Port, LED2_Pin);
-		}
+
+	}
+	if (Tick > off_time)
+	{
+		LL_GPIO_ResetOutputPin(LED2_GPIO_Port, LED2_Pin);
 	}
 
 }
