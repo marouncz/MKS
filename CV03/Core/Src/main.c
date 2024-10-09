@@ -92,20 +92,28 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   sct_init();
+  sct_led(0x7A5C36DE);
+  HAL_Delay(1000);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
+	while (1)
+	{
+		uint32_t displayValue = 0;
+		while(displayValue < 1000)
+		{
+			sct_value(displayValue);
+			HAL_Delay(1000);
+			displayValue+=111;
+		}
 
-		sct_led(0x7A5C36DE);
-		HAL_Delay(1000);
-    /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-  }
+		/* USER CODE END WHILE */
+
+		/* USER CODE BEGIN 3 */
+	}
   /* USER CODE END 3 */
 }
 
