@@ -47,7 +47,15 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 #define apply_Q(x) ((x) >> 12)
+/* Temperature sensor calibration value address */
+#define TEMP110_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7C2))
+#define TEMP30_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7B8))
+/* Internal voltage reference calibration value address */
+#define VREFINT_CAL_ADDR ((uint16_t*) ((uint32_t) 0x1FFFF7BA))
+
 static volatile uint32_t pot_filtered = 0;
+static volatile uint32_t raw_temp = 0;
+static volatile uint32_t raw_volt = 0;
 
 /* USER CODE END PV */
 
@@ -68,18 +76,23 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 		value_avg += HAL_ADC_GetValue(hadc);
 		pot_filtered = apply_Q(value_avg);
 	}
-	if(channel == 1)
+	else if(channel == 1)
 	{
 		//internal temp sensor reading
+		raw_temp = HAL_ADC_GetValue(hadc);
+
 	}
-	if(channel == 2)
+	else if(channel == 2)
 	{
-		//vref channel processing
+		//vref channel reading
+		raw_volt = HAL_ADC_GetValue(hadc);
+
 	}
 	else
 	{
 		//should never reach this
 	}
+
 	if (__HAL_ADC_GET_FLAG(hadc, ADC_FLAG_EOS)) channel = 0;
 	else channel++;
 }
@@ -131,8 +144,47 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  sct_value((pot_filtered * 501) / 4096, (pot_filtered * 9) / 4096);
-	  HAL_Delay(50);
+		static enum { SHOW_POT, SHOW_VOLT, SHOW_TEMP } state = SHOW_POT;
+		static uint32_t tick_at_press = 0;
+
+		if (HAL_GPIO_ReadPin(S1_GPIO_Port, S1_Pin) == 0)
+		{
+			state = SHOW_TEMP;
+			tick_at_press = HAL_GetTick();
+		}
+		if (HAL_GPIO_ReadPin(S2_GPIO_Port, S2_Pin) == 0)
+		{
+			state = SHOW_VOLT;
+			tick_at_press = HAL_GetTick();
+		}
+
+		switch(state)
+		{
+		case SHOW_POT:
+			sct_value((pot_filtered * 501) / 4096, (pot_filtered * 9) / 4096);
+			break;
+
+		case SHOW_VOLT:
+			uint32_t voltage = 330 * (*VREFINT_CAL_ADDR) / raw_volt;
+			sct_value(voltage, 0);
+			break;
+
+		case SHOW_TEMP:
+			int32_t temperature = (raw_temp - (int32_t) (*TEMP30_CAL_ADDR));
+			temperature = temperature * (int32_t) (110 - 30);
+			temperature = temperature / (int32_t) (*TEMP110_CAL_ADDR - *TEMP30_CAL_ADDR);
+			temperature = temperature + 30;
+			sct_value(temperature, 0);
+			break;
+
+		}
+
+		if(tick_at_press + 1000 < HAL_GetTick())
+		{
+			state = SHOW_POT;
+		}
+
+		HAL_Delay(50);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
