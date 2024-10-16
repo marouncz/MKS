@@ -149,15 +149,18 @@ int main(void)
 
 		if (HAL_GPIO_ReadPin(S1_GPIO_Port, S1_Pin) == 0)
 		{
+			//change state to temperature at button press
 			state = SHOW_TEMP;
 			tick_at_press = HAL_GetTick();
 		}
 		if (HAL_GPIO_ReadPin(S2_GPIO_Port, S2_Pin) == 0)
 		{
+			//change state to vref at button press
 			state = SHOW_VOLT;
 			tick_at_press = HAL_GetTick();
 		}
 
+		//state machine for display
 		switch(state)
 		{
 		case SHOW_POT:
