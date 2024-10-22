@@ -44,7 +44,7 @@ void uart_process_command(char *data)
 		{
 			HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
 		}
-		printf("OK\n");
+		printf("OK\r\n");
 	}
 	else if (strcasecmp(token, "LED2") == 0)
 	{
@@ -57,8 +57,15 @@ void uart_process_command(char *data)
 		{
 			HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
 		}
-		printf("OK\n");
+		printf("OK\r\n");
 	}
+	if (strcasecmp(token, "STATUS") == 0)
+	{
+		uint8_t statusLED1 = HAL_GPIO_ReadPin(LED1_GPIO_Port, LED1_Pin);
+		uint8_t statusLED2 = HAL_GPIO_ReadPin(LED2_GPIO_Port, LED2_Pin);
+		printf("LED1 is %s, LED2 is %s\r\n", statusLED1 ? "ON" : "OFF", statusLED2 ? "ON" : "OFF");
+	}
+
 
 }
 
