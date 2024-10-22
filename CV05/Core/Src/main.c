@@ -102,10 +102,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		while (uart_rx_read_ptr != uart_rx_write_ptr) {
+		while (uart_rx_read_ptr != uart_rx_write_ptr)
+		{
 			uint8_t b = uart_rx_buf[uart_rx_read_ptr];
 			// increase read pointer
-			if (++uart_rx_read_ptr >= RX_BUFFER_LEN) {
+			if (++uart_rx_read_ptr >= RX_BUFFER_LEN)
+			{
 				uart_rx_read_ptr = 0;
 			}
 			// process every received byte with the RX state machine

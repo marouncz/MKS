@@ -13,6 +13,7 @@
 #define CMD_BUFFER_LEN 256
 
 void uart_byte_available(uint8_t c);
+void uart_process_command(char* data);
 
 
 #endif /* INC_UART_PROCESSING_H_ */
