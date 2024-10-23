@@ -11,9 +11,6 @@
 
 uint8_t eepromReadAddress(uint16_t memAddress)
 {
-	while (HAL_I2C_IsDeviceReady(&hi2c1, EEPROM_ADDR, 300, 1000) == HAL_TIMEOUT)
-	{
-	}
 
 	uint8_t dataRead;
 	HAL_I2C_Mem_Read(&hi2c1, EEPROM_ADDR, memAddress, I2C_MEMADD_SIZE_16BIT, &dataRead, 1, 1000);
@@ -22,19 +19,15 @@ uint8_t eepromReadAddress(uint16_t memAddress)
 
 void eepromWriteAddress(uint16_t memAddress, uint8_t data)
 {
+	HAL_I2C_Mem_Write(&hi2c1, EEPROM_ADDR, memAddress, I2C_MEMADD_SIZE_16BIT, &data, 1, 1000);
 	while (HAL_I2C_IsDeviceReady(&hi2c1, EEPROM_ADDR, 300, 1000) == HAL_TIMEOUT)
 	{
 	}
-	HAL_I2C_Mem_Write(&hi2c1, EEPROM_ADDR, memAddress, I2C_MEMADD_SIZE_16BIT, &data, 1, 1000);
 
 }
 
 void eeprom16byteDump(uint16_t startAddress, uint8_t *pReadData)
 {
-	while (HAL_I2C_IsDeviceReady(&hi2c1, EEPROM_ADDR, 300, 1000) == HAL_TIMEOUT)
-	{
-	}
-
 	HAL_I2C_Mem_Read(&hi2c1, EEPROM_ADDR, startAddress, I2C_MEMADD_SIZE_16BIT, pReadData, 16, 1000);
 
 }
