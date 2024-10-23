@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include "usart.h"
 #include <string.h>
+#include "eeprom.h"
+#include <stdlib.h>
 
 void uart_byte_available(uint8_t c)
 {
@@ -64,6 +66,35 @@ void uart_process_command(char *data)
 		uint8_t statusLED1 = HAL_GPIO_ReadPin(LED1_GPIO_Port, LED1_Pin);
 		uint8_t statusLED2 = HAL_GPIO_ReadPin(LED2_GPIO_Port, LED2_Pin);
 		printf("LED1 is %s, LED2 is %s\r\n", statusLED1 ? "ON" : "OFF", statusLED2 ? "ON" : "OFF");
+	}
+	if (strcasecmp(token, "READ") == 0)
+	{
+		token = strtok(NULL, " ");
+		uint8_t dataRead;
+		dataRead = eepromReadAddress(atoi(token));
+		printf("Address: 0x%04X, Data: 0x%02X\r\n", atoi(token), dataRead);
+	}
+	if (strcasecmp(token, "WRITE") == 0)
+	{
+		token = strtok(NULL, " ");
+		uint16_t addressToWrite = atoi(token);
+		token = strtok(NULL, " ");
+		uint8_t dataToWrite = atoi(token);
+		eepromWriteAddress(addressToWrite, dataToWrite);
+		printf("OK\r\n");
+	}
+	if (strcasecmp(token, "DUMP") == 0)
+	{
+		uint8_t dumpData[16];
+		eeprom16byteDump(0x00, &dumpData[0]);
+	    printf(
+	        "%02X %02X %02X %02X %02X %02X %02X %02X\r\n"
+	        "%02X %02X %02X %02X %02X %02X %02X %02X\r\n",
+	        dumpData[0], dumpData[1], dumpData[2], dumpData[3],
+	        dumpData[4], dumpData[5], dumpData[6], dumpData[7],
+	        dumpData[8], dumpData[9], dumpData[10], dumpData[11],
+	        dumpData[12], dumpData[13], dumpData[14], dumpData[15]
+	    );
 	}
 
 
