@@ -110,11 +110,37 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  static enum {DALLAS, NTC} state;
 
 	  int16_t temperature;
 	  processDallas();
 	  processNTC();
-	  getNTCTemp(&temperature);
+
+	  if(!HAL_GPIO_ReadPin(S1_GPIO_Port, S1_Pin))
+	  {
+		  state = DALLAS;
+
+	  }
+	  else if(!HAL_GPIO_ReadPin(S2_GPIO_Port, S2_Pin))
+	  {
+		  state = NTC;
+	  }
+
+	  switch(state)
+	  {
+		case DALLAS:
+			getDallasTemp(&temperature);
+			HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
+			break;
+		case NTC:
+			getNTCTemp(&temperature);
+			HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
+			break;
+
+		}
+
 	  sct_value(temperature, 0, 2);
 
 
