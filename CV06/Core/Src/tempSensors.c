@@ -14,12 +14,12 @@
 #define CONVERT_T_DELAY_NTC 100
 #define ALPHA 0.4
 
-int16_t dallasTemperature = 0;
-int16_t ntcTemperature = 0;
+static int16_t dallasTemperature = 0;
+static int16_t ntcTemperature = 0;
 
 extern ADC_HandleTypeDef hadc;
 
-const int16_t ntcLookUp[1024] =
+static const int16_t ntcLookUp[1024] =
 { 1689, 1669, 1649, 1630, 1611, 1593, 1575, 1558, 1540, 1524, 1507, 1491, 1475, 1460, 1445, 1430, 1415, 1401, 1387,
 		1373, 1360, 1347, 1334, 1322, 1309, 1297, 1285, 1274, 1263, 1251, 1241, 1230, 1220, 1209, 1199, 1190, 1180,
 		1171, 1161, 1152, 1144, 1135, 1126, 1118, 1110, 1102, 1094, 1086, 1079, 1071, 1064, 1057, 1050, 1043, 1036,
