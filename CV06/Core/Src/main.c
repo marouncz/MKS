@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "1wire.h"
 #include "sct.h"
+#include "tempSensors.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,7 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define CONVERT_T_DELAY 750
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -101,25 +102,22 @@ int main(void)
   /* USER CODE BEGIN 2 */
   OWInit();
   sct_init();
+  HAL_ADCEx_Calibration_Start(&hadc);
+  HAL_ADC_Start(&hadc);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  int16_t temperature;
 
-	  OWConvertAll();
-	  HAL_Delay(CONVERT_T_DELAY);
-	  if(OWReadTemperature(&temperature))
-	  {
-		  //temp read OK
-		  sct_value(temperature/10, 0, 2);
-	  }
-	  else
-	  {
-		  //temp read fail
-	  }
+	  int16_t temperature;
+	  processDallas();
+	  processNTC();
+	  getNTCTemp(&temperature);
+	  sct_value(temperature, 0, 2);
+
+
 
     /* USER CODE END WHILE */
 
