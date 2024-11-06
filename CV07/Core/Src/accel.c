@@ -20,3 +20,7 @@ int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len)
 	HAL_I2C_Mem_Read(handle, LIS2DW12_I2C_ADD_H, reg, I2C_MEMADD_SIZE_8BIT, bufp, len, 1000);
 	return 0;
 }
+
+stmdev_ctx_t lis2dw12 =
+{ .write_reg = platform_write, .read_reg = platform_read, .handle = &hi2c1 };
+
