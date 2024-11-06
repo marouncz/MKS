@@ -26,6 +26,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "gpio.h"
+#include "lis2dw12_reg.h"
+#include "accel.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -198,6 +201,15 @@ void StartVisualTask(void const * argument)
 void StartAcceleroTask(void const * argument)
 {
   /* USER CODE BEGIN StartAcceleroTask */
+
+	static stmdev_ctx_t lis2dw12 =
+	{ .write_reg = platform_write, .read_reg = platform_read, .handle = &hi2c1, };
+
+	// Check device ID
+	uint8_t whoamI = 0;
+	lis2dw12_device_id_get(&lis2dw12, &whoamI);
+	printf("LIS2DW12_ID %s\n", (whoamI == LIS2DW12_ID) ? "OK" : "FAIL");
+
   /* Infinite loop */
   for(;;)
   {
