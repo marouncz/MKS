@@ -203,27 +203,37 @@ void StartAcceleroTask(void const * argument)
   /* USER CODE BEGIN StartAcceleroTask */
 
 	static stmdev_ctx_t lis2dw12 =
-	{ .write_reg = platform_write, .read_reg = platform_read, .handle = &hi2c1, };
+	{.write_reg = platform_write, .read_reg = platform_read, .handle = &hi2c1 };
 
 	// Check device ID
 	uint8_t whoamI = 0;
 	lis2dw12_device_id_get(&lis2dw12, &whoamI);
 	printf("LIS2DW12_ID %s\n", (whoamI == LIS2DW12_ID) ? "OK" : "FAIL");
 
+	lis2dw12_full_scale_set(&lis2dw12, LIS2DW12_2g);
+	lis2dw12_power_mode_set(&lis2dw12, LIS2DW12_CONT_LOW_PWR_LOW_NOISE_2);
+	lis2dw12_block_data_update_set(&lis2dw12, PROPERTY_ENABLE);
+	// enable continuous FIFO
+	lis2dw12_fifo_mode_set(&lis2dw12, LIS2DW12_STREAM_MODE);
+	// enable part from power-down
+	lis2dw12_data_rate_set(&lis2dw12, LIS2DW12_XL_ODR_25Hz);
+
+
   /* Infinite loop */
   for(;;)
   {
-		int16_t data = 0;
-		osMessagePut(xVisualQueueHandle, data, 0);
+		uint8_t samples;
+		int16_t raw_acceleration[3];
+		lis2dw12_fifo_data_level_get(&lis2dw12, &samples);
+		for (uint8_t i = 0; i < samples; i++)
+		{
+			// Read acceleration data
+			lis2dw12_acceleration_raw_get(&lis2dw12, raw_acceleration);
+			osMessagePut(xVisualQueueHandle, raw_acceleration[0], 0);
+			printf("X=%d Y=%d Z=%d\n", raw_acceleration[0], raw_acceleration[1], raw_acceleration[2]);
+		}
 		osDelay(100);
 
-		data = -5000;
-		osMessagePut(xVisualQueueHandle, data, 0);
-		osDelay(100);
-
-		data = 5000;
-		osMessagePut(xVisualQueueHandle, data, 0);
-		osDelay(100);
   }
   /* USER CODE END StartAcceleroTask */
 }

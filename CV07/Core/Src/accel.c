@@ -10,9 +10,9 @@
 #include "lis2dw12_reg.h"
 #include "accel.h"
 
-int32_t platform_write(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len)
+int32_t platform_write(void *handle, uint8_t reg, const uint8_t *bufp, uint16_t len)
 {
-	HAL_I2C_Mem_Write(handle, LIS2DW12_I2C_ADD_H, reg, I2C_MEMADD_SIZE_8BIT, bufp, len, 1000);
+	HAL_I2C_Mem_Write(handle, LIS2DW12_I2C_ADD_H, reg, I2C_MEMADD_SIZE_8BIT, (uint8_t *)bufp, len, 1000);
 	return 0;
 }
 int32_t platform_read(void *handle, uint8_t reg, uint8_t *bufp, uint16_t len)
