@@ -136,7 +136,7 @@ int main(void)
 			key = 0;
 		}
 
-		if(lastTickPress + 3000 < HAL_GetTick())
+		if(lastTickPress + 3000 < HAL_GetTick() && passwordIndex != 0)
 		{
 			passwordIndex = 0;
 			printf("Password entry timeout\n");
@@ -401,13 +401,14 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
- static uint8_t row = 0;
- static const char keyboard[4][4] = {
- { '1', '2', '3', 'A' },
- { '4', '5', '6', 'B' },
- { '7', '8', '9', 'C' },
- { '*', '0', '#', 'D' },
- };
+	static uint8_t row = 0;
+	static const char keyboard[4][4] =
+	{
+			{ '1', '2', '3', 'A' },
+			{ '4', '5', '6', 'B' },
+			{ '7', '8', '9', 'C' },
+			{ '*', '0', '#', 'D' },
+	};
 	if (key == 0)
 	{
 		if (HAL_GPIO_ReadPin(Col1_GPIO_Port, Col1_Pin) == GPIO_PIN_RESET)
