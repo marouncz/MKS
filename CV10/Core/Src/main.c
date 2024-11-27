@@ -46,6 +46,7 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 static volatile char key;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -74,7 +75,9 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	static const char password[] = { '7', '9', '3', '2', '#' };
+	static uint8_t passwordIndex;
+	static uint32_t lastTickPress;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -105,11 +108,39 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (key != 0) {
-	   printf("pressed '%c'\n", key);
-	   HAL_Delay(500);
-	   key = 0;
-	  }
+		if (key != 0)
+		{
+			lastTickPress = HAL_GetTick();
+			printf("pressed '%c'\n", key);
+
+			if (key == password[passwordIndex])
+			{
+				//correct key entry in sequence
+				passwordIndex++;
+			}
+			else
+			{
+				//incorrect key entry in sequence
+				passwordIndex = 0;
+			}
+
+			if (passwordIndex == sizeof(password))
+			{
+				//unlocked
+				printf("Unlocked\n");
+				passwordIndex = 0;
+				HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+			}
+
+			HAL_Delay(500);
+			key = 0;
+		}
+
+		if(lastTickPress + 3000 < HAL_GetTick())
+		{
+			passwordIndex = 0;
+			printf("Password entry timeout\n");
+		}
 
     /* USER CODE END WHILE */
 
@@ -377,25 +408,31 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
  { '7', '8', '9', 'C' },
  { '*', '0', '#', 'D' },
  };
-	if (key == 0) {
-		if (HAL_GPIO_ReadPin(Col1_GPIO_Port, Col1_Pin) == GPIO_PIN_RESET) {
+	if (key == 0)
+	{
+		if (HAL_GPIO_ReadPin(Col1_GPIO_Port, Col1_Pin) == GPIO_PIN_RESET)
+		{
 			key = keyboard[row][0];
 		}
-		if (HAL_GPIO_ReadPin(Col2_GPIO_Port, Col2_Pin) == GPIO_PIN_RESET) {
+		if (HAL_GPIO_ReadPin(Col2_GPIO_Port, Col2_Pin) == GPIO_PIN_RESET)
+		{
 			key = keyboard[row][1];
 		}
-		if (HAL_GPIO_ReadPin(Col3_GPIO_Port, Col3_Pin) == GPIO_PIN_RESET) {
-					key = keyboard[row][2];
+		if (HAL_GPIO_ReadPin(Col3_GPIO_Port, Col3_Pin) == GPIO_PIN_RESET)
+		{
+			key = keyboard[row][2];
 		}
-		if (HAL_GPIO_ReadPin(Col4_GPIO_Port, Col4_Pin) == GPIO_PIN_RESET) {
-					key = keyboard[row][3];
+		if (HAL_GPIO_ReadPin(Col4_GPIO_Port, Col4_Pin) == GPIO_PIN_RESET)
+		{
+			key = keyboard[row][3];
 		}
 	}
 	HAL_GPIO_WritePin(Row1_GPIO_Port, Row1_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(Row2_GPIO_Port, Row2_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(Row3_GPIO_Port, Row3_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(Row4_GPIO_Port, Row4_Pin, GPIO_PIN_SET);
-	switch (row) {
+	switch (row)
+	{
 	case 0:
 		row = 1;
 		HAL_GPIO_WritePin(Row2_GPIO_Port, Row2_Pin, GPIO_PIN_RESET);
