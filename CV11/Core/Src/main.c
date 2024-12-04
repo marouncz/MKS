@@ -23,7 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_hid.h"
-#include "stdbool.h"
+#include <stdbool.h>
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -33,7 +34,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define PI_F 3.14159265359f
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -53,7 +54,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
-void step(int x, int y, bool btn)
+void step(int32_t x, int32_t y, bool btn)
 {
 	uint8_t buff[4];
 	buff[0] = btn; // press the left button
@@ -63,6 +64,46 @@ void step(int x, int y, bool btn)
 	USBD_HID_SendReport(&hUsbDeviceFS, buff, sizeof(buff));
 	HAL_Delay(USBD_HID_GetPollingInterval(&hUsbDeviceFS));
 
+}
+
+void circle(int32_t radius, float startAngle, float stopAngle)
+{
+	int32_t oldX = radius * cosf(startAngle);
+	int32_t oldY = radius * sinf(startAngle);
+	int32_t x = 0;
+	int32_t y = 0;
+	for(float angle = startAngle; angle <= stopAngle; angle += PI_F/150)
+	{
+		x = radius * cosf(angle);
+		y = radius * sinf(angle);
+		int32_t dx = oldX-x;
+		int32_t dy = oldY-y;
+		step(dx, dy, 1);
+		oldX -= dx;
+		oldY -= dy;
+	}
+	//declick
+	step(0, 0, 0);
+
+}
+
+void drawFace(void)
+{
+	//draw main circle
+	circle(200, -PI_F/2.0, 2.0*PI_F-PI_F/2.0);
+	step(35, 200, 0);
+	//draw mouth
+	circle(120, -PI_F/2.0f-PI_F/4.0f, -PI_F/2.0f+PI_F/4.0f);
+	//draw nose
+	step(35, -30, 0);
+	step(0, 0, 1);
+	step(0, -30, 0);
+	step(30, -10, 0);
+	//draw right eye
+	circle(20, -PI_F/2.0, 2.0*PI_F-PI_F/2.0);
+	step(-80, 0, 0);
+	//draw left eye
+	circle(20, -PI_F/2.0, 2.0*PI_F-PI_F/2.0);
 }
 /* USER CODE END PFP */
 
@@ -112,7 +153,8 @@ int main(void)
   {
 	  if(HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin) == 1)
 	  {
-		  step(10, -3, 1);
+		  drawFace();
+
 	  }
     /* USER CODE END WHILE */
 
