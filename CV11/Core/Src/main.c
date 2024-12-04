@@ -47,6 +47,7 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 extern USBD_HandleTypeDef hUsbDeviceFS;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -54,15 +55,63 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
+void openMSPaint(void)
+{
+	uint8_t buff[9];
+	buff[0] = 0x01; //keyboard descriptor
+	buff[1] = 0x08; // modifier
+	buff[2] = 0x00; // reserved
+	buff[3] = 0x15; // keycode 1
+	buff[4] = 0x00; // keycode 2
+	buff[5] = 0x00; // keycode 3
+	buff[6] = 0x00; // keycode 4
+	buff[7] = 0x00; // keycode 5
+	buff[8] = 0x00; // keycode 6
+
+
+	USBD_HID_SendReport(&hUsbDeviceFS, buff, sizeof (buff));
+	HAL_Delay (100);
+	buff[1] = 0x00;
+	buff[3] = 0x00;
+	USBD_HID_SendReport(&hUsbDeviceFS, buff, sizeof (buff));
+	HAL_Delay (100);
+	buff[3] = 0x10; // keycode 1
+	buff[4] = 0x16; // keycode 2
+	buff[5] = 0x13; // keycode 3
+	buff[6] = 0x04; // keycode 4
+	buff[7] = 0x0c; // keycode 5
+	buff[8] = 0x11; // keycode 6
+	USBD_HID_SendReport(&hUsbDeviceFS, buff, sizeof (buff));
+	HAL_Delay (100);
+	buff[3] = 0x00; // keycode 1
+	buff[4] = 0x00; // keycode 2
+	buff[5] = 0x00; // keycode 3
+	buff[6] = 0x00; // keycode 4
+	buff[7] = 0x00; // keycode 5
+	buff[8] = 0x00; // keycode 6
+	USBD_HID_SendReport(&hUsbDeviceFS, buff, sizeof (buff));
+	HAL_Delay (100);
+	buff[3] = 0x17; // keycode 1
+	buff[4] = 0x28; // keycode 2
+	USBD_HID_SendReport(&hUsbDeviceFS, buff, sizeof (buff));
+	HAL_Delay (100);
+	buff[3] = 0x00; // keycode 1
+	buff[4] = 0x00; // keycode 2
+	USBD_HID_SendReport(&hUsbDeviceFS, buff, sizeof (buff));
+	HAL_Delay (100);
+
+
+}
 void step(int32_t x, int32_t y, bool btn)
 {
-	uint8_t buff[4];
-	buff[0] = btn; // press the left button
-	buff[1] = (int8_t)(x); // shift X
-	buff[2] = (int8_t)(y); // shift Y
-	buff[3] = 0; // no scroll
+	uint8_t buff[5];
+	buff[0] = 0x02; //mouse descriptor
+	buff[1] = btn; // press the left button
+	buff[2] = (int8_t)(x); // shift X
+	buff[3] = (int8_t)(y); // shift Y
+	buff[4] = 0; // no scroll
 	USBD_HID_SendReport(&hUsbDeviceFS, buff, sizeof(buff));
-	HAL_Delay(USBD_HID_GetPollingInterval(&hUsbDeviceFS));
+	HAL_Delay(2*USBD_HID_GetPollingInterval(&hUsbDeviceFS));
 
 }
 
@@ -153,6 +202,16 @@ int main(void)
   {
 	  if(HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin) == 1)
 	  {
+		  openMSPaint();
+		  HAL_Delay(500);
+		  step(0,0,0);
+		  for(uint8_t i = 0; i < 10; i++)
+		  {
+			  step(-127, 127, 0);
+		  }
+		  HAL_Delay(500);
+		  step(127, -127, 0);
+		  HAL_Delay(2000);
 		  drawFace();
 
 	  }
