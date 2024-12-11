@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lwip/apps/httpd.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,6 +48,7 @@ UART_HandleTypeDef huart3;
 osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
 extern void tcpecho_init(void);
+extern void telnet_init(void);
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -304,6 +306,7 @@ void StartDefaultTask(void const * argument)
   /* USER CODE BEGIN 5 */
   tcpecho_init();
   httpd_init();
+  telnet_init();
   /* Infinite loop */
   for(;;)
   {
