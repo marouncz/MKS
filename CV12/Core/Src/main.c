@@ -46,7 +46,7 @@ UART_HandleTypeDef huart3;
 
 osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
-
+extern void tcpecho_init(void);
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -302,6 +302,7 @@ void StartDefaultTask(void const * argument)
   /* init code for LWIP */
   MX_LWIP_Init();
   /* USER CODE BEGIN 5 */
+  tcpecho_init();
   /* Infinite loop */
   for(;;)
   {
