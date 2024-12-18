@@ -1,3 +1,4 @@
-../Core/Src/chaser.c:29:10:calculate_delay	16	static
-../Core/Src/chaser.c:35:6:handleTimer	8	static
-../Core/Src/chaser.c:44:6:handleChaser	16	static
+../Core/Src/chaser.c:28:10:calculate_delay	16	static
+../Core/Src/chaser.c:39:6:initChaserADC	8	static
+../Core/Src/chaser.c:46:6:handleTimer	8	static
+../Core/Src/chaser.c:58:6:handleChaser	16	static

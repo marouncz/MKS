@@ -12,4 +12,6 @@ void handleTimer(void);
 
 void handleChaser(void);
 
+void initChaserADC(void);
+
 #endif /* INC_CHASER_H_ */

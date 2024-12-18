@@ -147,6 +147,7 @@ void SysTick_Handler(void)
 void TIM17_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM17_IRQn 0 */
+	//timer handler for display control and ADC readout at approx. 100Hz
 	handleTimer();
 
   /* USER CODE END TIM17_IRQn 0 */

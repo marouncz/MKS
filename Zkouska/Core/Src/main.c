@@ -96,11 +96,14 @@ int main(void)
   MX_ADC_Init();
   MX_TIM17_Init();
   /* USER CODE BEGIN 2 */
+  //adc startup
   HAL_ADCEx_Calibration_Start(&hadc);
   HAL_ADC_Start(&hadc);
+  //timer interrupt startup
   HAL_TIM_Base_Start_IT(&htim17);
+
   sct_init();
-  sct_value(69, 3);
+  initChaserADC();
 
   /* USER CODE END 2 */
 
@@ -108,7 +111,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  handleChaser();
+	handleChaser();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

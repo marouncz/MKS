@@ -123,14 +123,13 @@ void sct_value_binary_led(uint16_t value, uint8_t led)
 	//look for which leds should be on and or them to the reg value
 	for (uint8_t i = 0; i < 8; i++)
 	{
-		if (led & (0b1<<i))
+		if (led & (0b1 << i))
 		{
-			reg |= standalone_led_values[i+1];
+			reg |= standalone_led_values[i + 1];
 		}
 	}
 
 	sct_led(reg);
-
 
 }
 
