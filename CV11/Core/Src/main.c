@@ -102,6 +102,7 @@ void openMSPaint(void)
 
 
 }
+
 void step(int32_t x, int32_t y, bool btn)
 {
 	uint8_t buff[5];
@@ -202,7 +203,7 @@ int main(void)
   {
 	  if(HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin) == 1)
 	  {
-		  openMSPaint();
+		  /*openMSPaint();
 		  HAL_Delay(500);
 		  step(0,0,0);
 		  for(uint8_t i = 0; i < 10; i++)
@@ -211,7 +212,7 @@ int main(void)
 		  }
 		  HAL_Delay(500);
 		  step(127, -127, 0);
-		  HAL_Delay(2000);
+		  HAL_Delay(2000);*/
 		  drawFace();
 
 	  }

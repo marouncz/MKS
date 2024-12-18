@@ -1,0 +1,4 @@
+../Core/Src/sct.c:81:6:sct_init	1
+../Core/Src/sct.c:87:6:sct_led	2
+../Core/Src/sct.c:103:6:sct_value	1
+../Core/Src/sct.c:115:6:sct_value_binary_led	3

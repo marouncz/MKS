@@ -1,0 +1,3 @@
+../Core/Src/chaser.c:29:10:calculate_delay	1
+../Core/Src/chaser.c:35:6:handleTimer	1
+../Core/Src/chaser.c:44:6:handleChaser	3
